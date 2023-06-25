@@ -36,9 +36,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void register(UserDto userDto) throws ValidationException {
 	validatorUser.validateData(userDto.getEmail(), userDto.getFirstName(), userDto.getLastName());
-
-	User user = new User(userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(),
-		passwordEncoder.encode(userDto.getPassword()));
+	
+	User user = User.builder()
+		.firstName(userDto.getFirstName())
+		.lastName(userDto.getLastName())
+		.email(userDto.getEmail())
+		.password(passwordEncoder.encode(userDto.getPassword()))
+		.build();
+	
 	userDao.save(user);
     }
 }

@@ -18,6 +18,17 @@ public class CourseServiceImpl implements CourseService {
     
     private final ValidatorCourse validatorCourse;
     private final CourseDao courseDao;
+    
+    @Override
+    public void register(String courseName, String courseDescription) throws ValidationException {
+	validatorCourse.validateCourseName(courseName);
+	validatorCourse.validateCourseDescription(courseDescription);
+
+	courseDao.save(Course.builder()
+		.courseName(courseName)
+		.courseDescription(courseDescription)
+		.build());
+    }
 
     
     @Override
@@ -36,14 +47,6 @@ public class CourseServiceImpl implements CourseService {
 		    + studentId + "' AND c.course_id = s_c.course_id)";
 
 	return courseDao.query(squery);
-    }
-    
-    @Override
-    public void register(String courseName, String courseDescription) throws ValidationException {
-	validatorCourse.validateCourseName(courseName);
-	validatorCourse.validateCourseDescription(courseDescription);
-
-	courseDao.save(new Course(courseName, courseDescription));
     }
     
     @Override
